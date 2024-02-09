@@ -109,19 +109,16 @@ class ViewController: UIViewController, UITableViewDataSource, NSFetchedResultsC
                 
             //TO-DO: esta operación hay que hacerla en un contexto en background
             DataUtils().exportarNotas(contexto: contextoBG)
+            
+            OperationQueue.main.addOperation {
+                let alert = UIAlertController(title: "",
+                                              message: "Se han exportado las notas",
+                                              preferredStyle: .alert)
+                let ok = UIAlertAction(title: "OK", style: .default)
+                alert.addAction(ok)
+                self.present(alert, animated: true)
+            }
         }
-        
-        OperationQueue.main.addOperation {
-            let alert = UIAlertController(title: "",
-                                          message: "Se han exportado las notas",
-                                          preferredStyle: .alert)
-            let ok = UIAlertAction(title: "OK", style: .default)
-            alert.addAction(ok)
-            self.present(alert, animated: true)
-        }
-
-
-        
     }
 
     @IBAction func botonBorrarTodasPulsado(_ sender: AnyObject) {
