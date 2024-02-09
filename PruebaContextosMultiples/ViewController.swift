@@ -101,17 +101,25 @@ class ViewController: UIViewController, UITableViewDataSource, NSFetchedResultsC
     @IBAction func botonExportarPulsado(_ sender: AnyObject) {
         
         let miDelegate = UIApplication.shared.delegate as! AppDelegate
-        let miContexto = miDelegate.persistentContainer.viewContext
         
-        //TO-DO: esta operación hay que hacerla en un contexto en background
-        DataUtils().exportarNotas(contexto: miContexto)
+        miDelegate.persistentContainer.performBackgroundTask() {
+           contextoBG in
+            //Aquí hacemos una operación costosa, como exportar cada nota a PDF
+            //o subirlas a un servidor
+                
+            //TO-DO: esta operación hay que hacerla en un contexto en background
+            DataUtils().exportarNotas(contexto: contextoBG)
+        }
+        
+        OperationQueue.main.addOperation {
+            let alert = UIAlertController(title: "",
+                                          message: "Se han exportado las notas",
+                                          preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default)
+            alert.addAction(ok)
+            self.present(alert, animated: true)
+        }
 
-        let alert = UIAlertController(title: "",
-                                      message: "Se han exportado las notas",
-                                      preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(ok)
-        self.present(alert, animated: true)
 
         
     }
